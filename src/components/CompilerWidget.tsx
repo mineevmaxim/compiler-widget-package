@@ -1,6 +1,6 @@
 // src/components/CompilerWidget.tsx
 import React, { memo, useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Handle, Position, NodeResizer, useReactFlow } from '@xyflow/react';
+import { Handle, Position, NodeResizer, useReactFlow, NodeProps } from '@xyflow/react';
 import { FileExplorer } from './FileExplorer';
 import { MonacoEditorWrapper } from './MonacoEditorWrapper';
 import { OutputPanel } from './OutputPanel';
@@ -28,10 +28,10 @@ interface ConfigModel {
     // ... то, как мы будем общаться с потребителем
 }
 
-interface CompilerWidgetProps {
-    id: number;
+interface CompilerWidgetProps extends NodeProps {
+    widgetId: number;
     isNew: boolean;
-    data?: {
+    widgetData?: {
         initialFiles?: Record<string, string>;
         language?: 'csharp' | 'js';
     };
@@ -40,7 +40,7 @@ interface CompilerWidgetProps {
 }
 
 
-const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNodeHeight }) => {
+const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widgetData, setNodeHeight }) => {
     const {
         documents,
         selectedDocument,
@@ -59,7 +59,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
         stop,
         saveAll
     } = useCompiler(
-        id, isNew, data?.initialFiles || {
+        widgetId, isNew, widgetData?.initialFiles || {
             'Program.cs': '// Write your code here\nConsole.WriteLine("Hello, World!");',
         }
     );
@@ -80,7 +80,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
     const currentCode = currentDocument?.content ?? '';
     const currentLanguage =
         currentDocument?.language ??
-        (data?.language === 'js' ? 'javascript' : 'csharp');
+        (widgetData?.language === 'js' ? 'javascript' : 'csharp');
 
     // panel widths
     const [leftWidth, setLeftWidth] = useState(180);
@@ -105,7 +105,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
     };
 
     const changeAllDocPath = (oldPath: string, newPath: string) => {
-        updatePath(id, oldPath, newPath);
+        updatePath(widgetId, oldPath, newPath);
     }
 
     const handleRepath = (id: string, oldPath: string, newPath: string) => {
@@ -123,15 +123,15 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
 
         const rect = containerRef.current.getBoundingClientRect();
         const initialHeight = collapsed ? 42 : Math.round(rect.height);
-        setNodeHeight(id, initialHeight);
-        maybeUpdateNodeDimensions(id);
+        setNodeHeight(widgetId, initialHeight);
+        maybeUpdateNodeDimensions(widgetId);
 
         const ro = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.target === containerRef.current) {
                     const h = collapsed ? 42 : Math.round(entry.contentRect.height);
-                    setNodeHeight(id, h);
-                    maybeUpdateNodeDimensions(id);
+                    setNodeHeight(widgetId, h);
+                    maybeUpdateNodeDimensions(widgetId);
                 }
             }
         });
@@ -143,13 +143,13 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
             ro.disconnect();
             resizeObserverRef.current = null;
         };
-    }, [id, setNodeHeight, collapsed]);
+    }, [widgetId, setNodeHeight, collapsed]);
 
     useEffect(() => {
         if (!containerRef.current || !setNodeHeight) return;
         const h = collapsed ? 42 : Math.round(containerRef.current.getBoundingClientRect().height);
-        setNodeHeight(id, h);
-        maybeUpdateNodeDimensions(id);
+        setNodeHeight(widgetId, h);
+        maybeUpdateNodeDimensions(widgetId);
     }, [collapsed]);
 
     const toggleCollapsed = () => setCollapsed(prev => !prev);
