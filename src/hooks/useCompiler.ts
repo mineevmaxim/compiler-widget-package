@@ -2,12 +2,12 @@ import {useEffect, useLayoutEffect, useState } from "react";
 import type { EditorDocument } from "../types/EditorDocument";
 import { FileApi, ProjectApi, CompilerApi } from "../api";
 
-export function useCompiler(id: string, isNew: boolean, initialFiles?: Record<string, string>) {
+export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<string, string>) {
 
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
     const [needToCreateFiles, setNeedToCreateFiles] = useState<boolean>(isNew);
 
-    const [projectId, setProjectId] = useState<string>(id);
+    const [projectId, setProjectId] = useState<number>(id);
     const [output, setOutput] = useState<string>("");
 
     const fileApi = new FileApi();
@@ -145,7 +145,7 @@ export function useCompiler(id: string, isNew: boolean, initialFiles?: Record<st
         );
         return newDocs;
     });
-    fileApi.apiFilesFileIdMovePost(fileId, undefined, newPath);
+    fileApi.apiFilesFileIdMovePost(fileId, newPath);
 };
 
 
@@ -155,7 +155,7 @@ export function useCompiler(id: string, isNew: boolean, initialFiles?: Record<st
         )
     }
 
-    const updatePath = (id: string, oldPath: string, newPath: string) => {
+    const updatePath = (id: number, oldPath: string, newPath: string) => {
         setDocuments(prevDocs =>
         prevDocs.map(doc => {
             if (doc.path?.startsWith(oldPath)) {

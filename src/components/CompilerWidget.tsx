@@ -29,13 +29,13 @@ interface ConfigModel {
 }
 
 interface CompilerWidgetProps {
-    id: string;
+    id: number;
     isNew: boolean;
     data?: {
         initialFiles?: Record<string, string>;
         language?: 'csharp' | 'js';
     };
-    setNodeHeight?: (id: string, height: number) => void;
+    setNodeHeight?: (id: number, height: number) => void;
     getInfo?: (info: GetInfoModel) => void; 
 }
 
@@ -65,7 +65,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
 
     // useReactFlow мы оставляем, но НЕ полагаемся на updateNodeDimensions — вызываем опционально
     const rf = useReactFlow();
-    const maybeUpdateNodeDimensions = (nodeId: string) => {
+    const maybeUpdateNodeDimensions = (nodeId: number) => {
         if (rf && typeof (rf as any).updateNodeDimensions === 'function') {
             try {
                 (rf as any).updateNodeDimensions(nodeId);
@@ -117,23 +117,19 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
     const containerRef = useRef<HTMLDivElement | null>(null);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
-    // Синхронизировать высоту ноды при изменении контейнера
     useLayoutEffect(() => {
         if (!containerRef.current || !setNodeHeight) return;
 
-        // initial set
         const rect = containerRef.current.getBoundingClientRect();
         const initialHeight = collapsed ? 42 : Math.round(rect.height);
         setNodeHeight(id, initialHeight);
         maybeUpdateNodeDimensions(id);
 
-        // Создаём ResizeObserver, если доступен
         const ro = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.target === containerRef.current) {
                     const h = collapsed ? 42 : Math.round(entry.contentRect.height);
                     setNodeHeight(id, h);
-                    // опционально форсируем перерисовку XYFlow (если API доступен)
                     maybeUpdateNodeDimensions(id);
                 }
             }
