@@ -9,14 +9,17 @@ interface MonacoEditorWrapperProps {
     language: string; // "javascript" | "csharp"
     onChange: (value: string) => void;
     theme?: string;
+    filename?: string;
 }
 
 export const MonacoEditorWrapper: React.FC<MonacoEditorWrapperProps> = ({
-                                                                            code,
-                                                                            language,
-                                                                            onChange,
-                                                                            theme = "vs-light",
-                                                                        }) => {
+    code,
+    language,
+    onChange,
+    theme = "vs-light",
+    filename
+
+}) => {
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const modelRef = useRef<monaco.editor.ITextModel | null>(null);
 
@@ -46,7 +49,7 @@ export const MonacoEditorWrapper: React.FC<MonacoEditorWrapperProps> = ({
     return (
         <div className={cls.editorContainer}>
             <div className={cls.editorHeader}>
-                <span>{language === "csharp" ? "C#" : "JS"}</span>
+                <span>{filename}</span>
             </div>
 
             <Editor
@@ -86,7 +89,7 @@ export const MonacoEditorWrapper: React.FC<MonacoEditorWrapperProps> = ({
                     lightbulb: {
                         enabled: "onCode" as any,
                     },
-                            }}
+                }}
             />
         </div>
     );

@@ -39,6 +39,7 @@ interface CompilerWidgetProps {
     getInfo?: (info: GetInfoModel) => void; 
 }
 
+
 const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNodeHeight }) => {
     const {
         documents,
@@ -142,21 +143,17 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
             ro.disconnect();
             resizeObserverRef.current = null;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, setNodeHeight, collapsed]);
 
     useEffect(() => {
-        // при смене collapsed форсируем одноразовый пересчёт (на случай, если ResizeObserver не сработал моментально)
         if (!containerRef.current || !setNodeHeight) return;
         const h = collapsed ? 42 : Math.round(containerRef.current.getBoundingClientRect().height);
         setNodeHeight(id, h);
         maybeUpdateNodeDimensions(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [collapsed]);
 
     const toggleCollapsed = () => setCollapsed(prev => !prev);
 
-    // Manual panel resizing: убираем прямые вызовы updateNodeDimensions, теперь ResizeObserver всё подхватит
     const startResizing = (
         e: React.MouseEvent,
         setter: (v: number) => void,
@@ -235,6 +232,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ id, isNew, data, setNod
                     {/* LEFT PANEL */}
                     <div className={cls.panel} style={{ width: leftWidth }}>
                         <FileExplorer
+                            key = {documents.length}
                             documents={documents}
                             selectedId={selectedId}
                             onSelect={setSelectedId}
