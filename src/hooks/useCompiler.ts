@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import type { EditorDocument } from "../types/EditorDocument";
-import { FileApi, ProjectApi, CompilerApi } from "../api";
+import { FileApi, ProjectApi, CompilerApi, type CompilationError } from "../api";
 
 export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<string, string>) {
 
@@ -246,13 +246,23 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
             mainFile: "ConsoleApp.csproj"
         });
 
-        setOutput(res.data.output ?? "");
+        console.log(res);
+        console.log(errorToView(res.data.errors));
+        
 
+        setOutput(res.data.output ? res.data.output : errorToView(res.data.errors) ?? "");
+        console.log();
+        
+
+        await stop();
     }
     const stop = () => {
-        compilerApi.apiCompileProjectProjectIdStopPost(projectId)
-            .catch(err => alert(err));
+        compilerApi.apiCompileProjectProjectIdStopPost(projectId);
     }
+
+    const errorToView = (errors: CompilationError[] | undefined | null): string => {
+        return errors?.map(err => err.errorCode + " " + err.message)?.join(", ") ?? "";
+    };
 
 
 

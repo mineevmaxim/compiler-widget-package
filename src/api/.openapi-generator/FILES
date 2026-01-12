@@ -4,6 +4,7 @@ api.ts
 base.ts
 common.ts
 configuration.ts
+docs/BoardDto.md
 docs/CompilationError.md
 docs/CompileRequest.md
 docs/CompileResult.md
@@ -23,5 +24,6 @@ docs/RunRequest.md
 docs/RunResult.md
 docs/RunningProjectInfo.md
 docs/UpdateFileDto.md
+docs/WidgetInfoRequest.md
 git_push.sh
 index.ts

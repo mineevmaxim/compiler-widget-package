@@ -12,6 +12,10 @@ All URIs are relative to *http://localhost*
 |[**apiProjectsProjectIdGet**](#apiprojectsprojectidget) | **GET** /api/projects/{projectId} | |
 |[**apiProjectsProjectIdRenamePut**](#apiprojectsprojectidrenameput) | **PUT** /api/projects/{projectId}/rename | |
 |[**apiProjectsProjectIdStatsGet**](#apiprojectsprojectidstatsget) | **GET** /api/projects/{projectId}/stats | |
+|[**apiProjectsProjectIdWidgetGet**](#apiprojectsprojectidwidgetget) | **GET** /api/projects/{projectId}/widget | |
+|[**apiProjectsWidgetGetInfoPost**](#apiprojectswidgetgetinfopost) | **POST** /api/projects/widget/getInfo | |
+|[**apiProjectsWidgetWidgetIdGet**](#apiprojectswidgetwidgetidget) | **GET** /api/projects/widget/{widgetId} | |
+|[**apiProjectsWidgetWidgetIdPut**](#apiprojectswidgetwidgetidput) | **PUT** /api/projects/widget/{widgetId} | |
 
 # **apiProjectsCreatePost**
 > string apiProjectsCreatePost()
@@ -272,7 +276,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new ProjectApi(configuration);
 
-let projectId: string; // (default to undefined)
+let projectId: number; // (default to undefined)
 
 const { status, data } = await apiInstance.apiProjectsProjectIdGet(
     projectId
@@ -283,7 +287,7 @@ const { status, data } = await apiInstance.apiProjectsProjectIdGet(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **projectId** | [**string**] |  | defaults to undefined|
+| **projectId** | [**number**] |  | defaults to undefined|
 
 
 ### Return type
@@ -323,7 +327,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new ProjectApi(configuration);
 
-let projectId: string; // (default to undefined)
+let projectId: number; // (default to undefined)
 let renameProjectRequest: RenameProjectRequest; // (optional)
 
 const { status, data } = await apiInstance.apiProjectsProjectIdRenamePut(
@@ -337,7 +341,7 @@ const { status, data } = await apiInstance.apiProjectsProjectIdRenamePut(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **renameProjectRequest** | **RenameProjectRequest**|  | |
-| **projectId** | [**string**] |  | defaults to undefined|
+| **projectId** | [**number**] |  | defaults to undefined|
 
 
 ### Return type
@@ -376,7 +380,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new ProjectApi(configuration);
 
-let projectId: string; // (default to undefined)
+let projectId: number; // (default to undefined)
 
 const { status, data } = await apiInstance.apiProjectsProjectIdStatsGet(
     projectId
@@ -387,7 +391,7 @@ const { status, data } = await apiInstance.apiProjectsProjectIdStatsGet(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **projectId** | [**string**] |  | defaults to undefined|
+| **projectId** | [**number**] |  | defaults to undefined|
 
 
 ### Return type
@@ -402,6 +406,211 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: text/plain, application/json, text/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiProjectsProjectIdWidgetGet**
+> apiProjectsProjectIdWidgetGet()
+
+
+### Example
+
+```typescript
+import {
+    ProjectApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new ProjectApi(configuration);
+
+let projectId: number; // (default to undefined)
+
+const { status, data } = await apiInstance.apiProjectsProjectIdWidgetGet(
+    projectId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **projectId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiProjectsWidgetGetInfoPost**
+> apiProjectsWidgetGetInfoPost()
+
+
+### Example
+
+```typescript
+import {
+    ProjectApi,
+    Configuration,
+    WidgetInfoRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new ProjectApi(configuration);
+
+let widgetInfoRequest: WidgetInfoRequest; // (optional)
+
+const { status, data } = await apiInstance.apiProjectsWidgetGetInfoPost(
+    widgetInfoRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **widgetInfoRequest** | **WidgetInfoRequest**|  | |
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json, text/json, application/*+json
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiProjectsWidgetWidgetIdGet**
+> apiProjectsWidgetWidgetIdGet()
+
+
+### Example
+
+```typescript
+import {
+    ProjectApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new ProjectApi(configuration);
+
+let widgetId: number; // (default to undefined)
+
+const { status, data } = await apiInstance.apiProjectsWidgetWidgetIdGet(
+    widgetId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **widgetId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiProjectsWidgetWidgetIdPut**
+> apiProjectsWidgetWidgetIdPut()
+
+
+### Example
+
+```typescript
+import {
+    ProjectApi,
+    Configuration,
+    WidgetInfoRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new ProjectApi(configuration);
+
+let widgetId: number; // (default to undefined)
+let widgetInfoRequest: WidgetInfoRequest; // (optional)
+
+const { status, data } = await apiInstance.apiProjectsWidgetWidgetIdPut(
+    widgetId,
+    widgetInfoRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **widgetInfoRequest** | **WidgetInfoRequest**|  | |
+| **widgetId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json, text/json, application/*+json
+ - **Accept**: Not defined
 
 
 ### HTTP response details
