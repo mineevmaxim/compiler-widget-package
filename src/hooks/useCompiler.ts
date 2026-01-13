@@ -89,6 +89,36 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
         );
     };
 
+    //АХАХАХАХАХАХАХАХАХАХАХАХАХАХ
+    const iaScazalaStartuem = (fileName?: string, path?: string) => {
+        try {
+            const api = new ProjectApi();
+            const response = await api.apiProjectsGetOrCreateProjectIdPost(model.widgetId.toString());
+    
+            const widgetInfoRequest: WidgetInfoRequest = {
+                widgetId: Number(model.widgetId),
+                userId: model.userId,
+                role: model.role,
+                config: model.config,
+                board: {
+                    id: model.board.id,
+                    name: model.board.name,
+                    parentId: model.board.parentId
+                }
+            };
+    
+            const response2 = await api.apiProjectsWidgetGetInfoPost(widgetInfoRequest)
+            
+            console.log('Статус ответа:', response2.status);
+            
+            // Предположим, что статус 201 = создан новый, 200 = уже существовал
+            return response.status === 201;
+        } catch (error) {
+            console.error('Ошибка при создании/получении проекта:', error);
+            throw error; // или верни false/по умолчанию
+        }
+    }
+
     // В useCompiler.ts обновляем функцию addDocument:
     const addDocument = (fileName?: string, path?: string) => {
         // Если передано имя файла - используем его, иначе генерируем
@@ -278,6 +308,7 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
         updateDocument,
         deleteDocument,
         updateOneDocPath,
+        iaScazalaStartuem,        
         run,
         stop,
         output,
