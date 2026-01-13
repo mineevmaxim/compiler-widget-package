@@ -9,7 +9,7 @@ export { useCompiler } from './hooks/useCompiler';
 export { FileApi, CompilerApi, Configuration } from './api';
 
 export type { EditorDocument } from './types/EditorDocument';
-export { type GetInfoModel, getInfo, getWidgetInfo, updateInfo } from './getInfo';
+export { type GetInfoModel, getInfo } from './getInfo';
 
 import CompilerWidget from './components/CompilerWidget';
 import { Handle, Position } from '@xyflow/react';

@@ -1,18 +1,29 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { EditorDocument } from "../types/EditorDocument";
 import { FileApi, ProjectApi, CompilerApi, type CompilationError } from "../api";
 
-export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<string, string>) {
+interface GetInfoModelDto {
+    widgetId: string,
+    userId: number,
+    role: string,
+    config: string,
+    board: {
+        id: number,
+        name: string,
+        parentId: number
+    }
+}
+
+export function useCompiler(id: number, initialFiles?: Record<string, string>) {
 
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
-    const [needToCreateFiles, setNeedToCreateFiles] = useState<boolean>(isNew);
+    const [needToCreateFiles, setNeedToCreateFiles] = useState<boolean>(true);
 
     const [projectId, setProjectId] = useState<number>(id);
     const [output, setOutput] = useState<string>("");
 
     const fileApi = new FileApi();
     const compilerApi = new CompilerApi();
-
 
     const [documents, setDocuments] = useState<EditorDocument[]>([]);
 
@@ -90,29 +101,32 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
     };
 
     //АХАХАХАХАХАХАХАХАХАХАХАХАХАХ
-    const iaScazalaStartuem = (fileName?: string, path?: string) => {
+    const iaScazalaStartuem = (model: GetInfoModelDto) => {
         try {
             const api = new ProjectApi();
-            const response = await api.apiProjectsGetOrCreateProjectIdPost(model.widgetId.toString());
-    
-            const widgetInfoRequest: WidgetInfoRequest = {
-                widgetId: Number(model.widgetId),
-                userId: model.userId,
-                role: model.role,
-                config: model.config,
-                board: {
-                    id: model.board.id,
-                    name: model.board.name,
-                    parentId: model.board.parentId
-                }
-            };
-    
-            const response2 = await api.apiProjectsWidgetGetInfoPost(widgetInfoRequest)
-            
-            console.log('Статус ответа:', response2.status);
-            
-            // Предположим, что статус 201 = создан новый, 200 = уже существовал
-            return response.status === 201;
+            api.apiProjectsGetOrCreateProjectIdPost(model.widgetId.toString())
+                .then((res) => {
+
+                    if (res.status === 201) setNeedToCreateFiles(true);
+                    if (res.status === 200) setNeedToCreateFiles(false);
+
+                    const widgetInfoRequest = {
+                        widgetId: +model.widgetId,
+                        userId: model.userId,
+                        role: model.role,
+                        config: model.config,
+                        board: {
+                            id: model.board.id,
+                            name: model.board.name,
+                            parentId: model.board.parentId
+                        }
+                    };
+
+                    const response2 = api.apiProjectsWidgetGetInfoPost(widgetInfoRequest).then(response2 => {
+                        console.log('Статус ответа:', response2);
+                    })
+                });
+
         } catch (error) {
             console.error('Ошибка при создании/получении проекта:', error);
             throw error; // или верни false/по умолчанию
@@ -278,11 +292,11 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
 
         console.log(res);
         console.log(errorToView(res.data.errors));
-        
+
 
         setOutput(res.data.output ? res.data.output : errorToView(res.data.errors) ?? "");
         console.log();
-        
+
 
         await stop();
     }
@@ -308,7 +322,7 @@ export function useCompiler(id: number, isNew: boolean, initialFiles?: Record<st
         updateDocument,
         deleteDocument,
         updateOneDocPath,
-        iaScazalaStartuem,        
+        iaScazalaStartuem,
         run,
         stop,
         output,

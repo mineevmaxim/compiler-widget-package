@@ -1,46 +1,27 @@
 // src/components/CompilerWidget.tsx
 import React, { memo, useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Handle, Position, NodeResizer, useReactFlow, NodeProps } from '@xyflow/react';
+import { Handle, Position, useReactFlow, NodeProps } from '@xyflow/react';
 import { FileExplorer } from './FileExplorer';
 import { MonacoEditorWrapper } from './MonacoEditorWrapper';
 import { OutputPanel } from './OutputPanel';
 import cls from './CompilerWidget.module.scss';
 import { useCompiler } from '../hooks/useCompiler';
 
-import { Badge, Shield, SquarePen, X } from "lucide-react";
+import { Shield, SquarePen, X } from "lucide-react";
 
 import type { EditorDocument } from '../types/EditorDocument';
 import { RunContainer } from "./RunContainer.tsx";
 
-interface GetInfoModel {
-  "widgetId": number,
-  "userId": number,
-  "role": string,
-  "config": string, // json
-  "board": {
-    "id": number,
-    "name": string,
-    "parentId": number
-  }
+const files = {
+    "ConsoleApp.csproj":
+        '<Project Sdk="Microsoft.NET.Sdk">\n  <PropertyGroup>\n    <OutputType>Exe</OutputType>\n    <TargetFramework>net9.0</TargetFramework>\n  </PropertyGroup>\n</Project>',
+    "Program.cs":
+        'using System;\n\nnamespace ConsoleApp\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            Console.WriteLine("Hello from compiled C#!");\n            Console.WriteLine($"Current time: {DateTime.Now}");\n        }\n    }\n}'
 }
 
-interface ConfigModel {
-    // ... то, как мы будем общаться с потребителем
-}
+const CompilerWidget: React.FC<NodeProps> = ({ data }) => {
+    const [widgetId] = useState<number>(data.backendId as number);
 
-interface CompilerWidgetProps extends NodeProps {
-    widgetId: number;
-    isNew: boolean;
-    widgetData?: {
-        initialFiles?: Record<string, string>;
-        language?: 'csharp' | 'js';
-    };
-    setNodeHeight?: (id: number, height: number) => void;
-    getInfo?: (info: GetInfoModel) => void; 
-}
-
-
-const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widgetData, setNodeHeight }) => {
     const {
         documents,
         selectedDocument,
@@ -49,6 +30,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
         setDocumentContent,
         addDocument,
         deleteDocument,
+        iaScazalaStartuem,
         updateOneDocPath,
         updateDocument,
         updateDocPath,
@@ -58,29 +40,40 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
         run,
         stop,
         saveAll
-    } = useCompiler(
-        widgetId, isNew, widgetData?.initialFiles || {
-            'Program.cs': '// Write your code here\nConsole.WriteLine("Hello, World!");',
-        }
-    );
+    } = useCompiler(widgetId, files);
 
-    // useReactFlow мы оставляем, но НЕ полагаемся на updateNodeDimensions — вызываем опционально
     const rf = useReactFlow();
     const maybeUpdateNodeDimensions = (nodeId: number) => {
         if (rf && typeof (rf as any).updateNodeDimensions === 'function') {
             try {
                 (rf as any).updateNodeDimensions(nodeId);
             } catch {
-                // игнорируем ошибки — основной механизм через setNodeHeight
             }
         }
     };
 
+    useEffect(() => {
+        const model = {
+            widgetId: widgetId.toString(),
+            userId: 123,
+            board: {
+                id: 123,
+                name: 'asd',
+                parentId: 132
+            },
+            config: "",
+            role: "ads"
+        }
+        iaScazalaStartuem(model);
+    }, [widgetId]);
+
+    useEffect(() => {
+        console.log(widgetId)
+    }, [widgetId])
+
     const currentDocument: EditorDocument | null = selectedDocument ?? (documents[0] ?? null);
     const currentCode = currentDocument?.content ?? '';
-    const currentLanguage =
-        currentDocument?.language ??
-        (widgetData?.language === 'js' ? 'javascript' : 'csharp');
+    const currentLanguage = 'csharp';
 
     // panel widths
     const [leftWidth, setLeftWidth] = useState(180);
@@ -95,10 +88,10 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
     };
 
     // Обработчик переименования файла
-   const handleRename = (id: string, newName: string) => {
+    const handleRename = (id: string, newName: string) => {
         const doc = documents.find(d => d.id === id);
         if (!doc || newName === doc.name) return;
-        
+
         updateDocument(id, {
             name: newName
         });
@@ -112,25 +105,21 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
         const doc = documents.find(d => d.id === id);
         updateOneDocPath(id, newPath)
         if (!doc || newPath === doc.path) return;
-        
+
     };
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
     useLayoutEffect(() => {
-        if (!containerRef.current || !setNodeHeight) return;
+        if (!containerRef.current) return;
 
         const rect = containerRef.current.getBoundingClientRect();
-        const initialHeight = collapsed ? 42 : Math.round(rect.height);
-        setNodeHeight(widgetId, initialHeight);
         maybeUpdateNodeDimensions(widgetId);
 
         const ro = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.target === containerRef.current) {
-                    const h = collapsed ? 42 : Math.round(entry.contentRect.height);
-                    setNodeHeight(widgetId, h);
                     maybeUpdateNodeDimensions(widgetId);
                 }
             }
@@ -143,12 +132,10 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
             ro.disconnect();
             resizeObserverRef.current = null;
         };
-    }, [widgetId, setNodeHeight, collapsed]);
+    }, [widgetId, collapsed]);
 
     useEffect(() => {
-        if (!containerRef.current || !setNodeHeight) return;
-        const h = collapsed ? 42 : Math.round(containerRef.current.getBoundingClientRect().height);
-        setNodeHeight(widgetId, h);
+        if (!containerRef.current) return;
         maybeUpdateNodeDimensions(widgetId);
     }, [collapsed]);
 
@@ -195,14 +182,6 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
             <Handle type="target" position={Position.Top} />
 
             {/* GLOBAL NodeResizer (xyflow) — виден только если не collapsed */}
-            {!collapsed && (
-                <NodeResizer
-                    minWidth={600}
-                    minHeight={300}
-                    // Некоторые версии NodeResizer поддержуют onResize/onResizeEnd, некоторые — нет.
-                    // Мы полагаемся на ResizeObserver для синхронизации высоты, так что не обязаны использовать коллбэки.
-                />
-            )}
 
             {/* HEADER */}
             <div className="drag-handle__custom">
@@ -232,7 +211,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
                     {/* LEFT PANEL */}
                     <div className={cls.panel} style={{ width: leftWidth }}>
                         <FileExplorer
-                            key = {documents.length}
+                            key={documents.length}
                             documents={documents}
                             selectedId={selectedId}
                             onSelect={setSelectedId}
@@ -262,7 +241,7 @@ const CompilerWidget: React.FC<CompilerWidgetProps> = ({ widgetId, isNew, widget
                                     onChange={handleCodeChange}
                                     theme="vs-light"
                                 />
-                                <RunContainer run={run} stop={stop} save={saveAll}/>
+                                <RunContainer run={run} stop={stop} save={saveAll} />
                             </div>
                         ) : (
                             <div style={{ padding: 16, color: '#666' }}>

@@ -1,6 +1,3 @@
-import { ProjectApi  } from "./api"
-import type {WidgetInfoRequest} from "./api"
-
 
 export interface GetInfoModel {
     widgetId: number|null,

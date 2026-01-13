@@ -1,150 +1,152 @@
-button {
-  margin: 0;
-  padding: 0;
-}
-
 .runContainer {
   display: flex;
   flex-direction: row;
   padding: 6px 7px;
   border-top: 2px solid #E2E8F0;
   background-color: #F8FAFC;
-}
 
-
-.runText {
-  font-family: Arial;
-  font-weight: 400;
-  font-size: 12px;
-  padding: 0;
-  margin: 0;
-}
-
-.runButton {
-  display: flex;
-  flex-direction: row;
-  width: auto;
-  padding: 6px 7px;
-  margin-right: 6px;
-  background-color: #74c56f;
-  align-items: center;
-  justify-content: center;
-}
-
-.stopButton {
-  width: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  padding: 6px 7px;
-  background-color: #e57575;
-}
-
-.startIcon {
-  margin-right: 3px;
-  height: 11px;
-}
-
-.stopIcon {
-  margin-right: 3px;
-  height: 13px;
-}
-
-.baseButton {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  border: none;
-  border-radius: 6px;
-  padding: 6px 14px;
-  font-size: 14px;
-  font-weight: 500;
-
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
-
-  color: white;              /* <-- иконкам цвет идёт отсюда */
-}
-
-.baseButton:active {
-  transform: scale(0.97);
-}
-
-/* ===================== */
-/*       RUN BUTTON      */
-/* ===================== */
-.runButton {
-  @extend .baseButton;
-
-  background: #22c55e;
-
-  &:hover {
-    background: #16a34a;
+  button {
+    margin: 0;
+    padding: 0;
   }
 
-  &:active {
-    background: #15803d;
-  }
-}
-
-.startIcon {
-  width: 15px;
-  height: 15px;
-  margin-right: 6px;
-  color: white; /* SVG окрашивается */
-}
-
-/* ===================== */
-/*      STOP BUTTON      */
-/* ===================== */
-.stopButton {
-  @extend .baseButton;
-  margin-right: 5px;
-
-  background: #ef4444;
-
-  &:hover {
-    background: #dc2626;
+  .runText {
+    font-family: Arial;
+    font-weight: 400;
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
   }
 
-  &:active {
-    background: #b91c1c;
-  }
-}
-
-.stopIcon {
-  width: 18px;
-  height: 18px;
-  margin-right: 6px;
-  color: white; // окрашивает stroke="currentColor"
-}
-
-/* ===================== */
-/*      SAVE BUTTON      */
-/* ===================== */
-.saveButton {
-  @extend .baseButton;
-
-  margin-left: auto;
-  margin-right: 7px;
-
-  background: #3b82f6;
-
-  &:hover {
-    background: #2563eb;
+  .runButton {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    padding: 6px 7px;
+    margin-right: 6px;
+    background-color: #74c56f;
+    align-items: center;
+    justify-content: center;
   }
 
-  &:active {
-    background: #1d4ed8;
+  .stopButton {
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    padding: 6px 7px;
+    background-color: #e57575;
   }
-}
 
-.saveIcon {
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-  color: white;  /* <-- ТЕПЕРЬ РАБОТАЕТ */
+  .startIcon {
+    margin-right: 3px;
+    height: 11px;
+  }
+
+  .stopIcon {
+    margin-right: 3px;
+    height: 13px;
+  }
+
+  .baseButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+
+    color: white;
+    /* <-- иконкам цвет идёт отсюда */
+  }
+
+  .baseButton:active {
+    transform: scale(0.97);
+  }
+
+  /* ===================== */
+  /*       RUN BUTTON      */
+  /* ===================== */
+  .runButton {
+    @extend .baseButton;
+
+    background: #22c55e;
+
+    &:hover {
+      background: #16a34a;
+    }
+
+    &:active {
+      background: #15803d;
+    }
+  }
+
+  .startIcon {
+    width: 15px;
+    height: 15px;
+    margin-right: 6px;
+    color: white;
+    /* SVG окрашивается */
+  }
+
+  /* ===================== */
+  /*      STOP BUTTON      */
+  /* ===================== */
+  .stopButton {
+    @extend .baseButton;
+    margin-right: 5px;
+
+    background: #ef4444;
+
+    &:hover {
+      background: #dc2626;
+    }
+
+    &:active {
+      background: #b91c1c;
+    }
+  }
+
+  .stopIcon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    color: white; // окрашивает stroke="currentColor"
+  }
+
+  /* ===================== */
+  /*      SAVE BUTTON      */
+  /* ===================== */
+  .saveButton {
+    @extend .baseButton;
+
+    margin-left: auto;
+    margin-right: 7px;
+
+    background: #3b82f6;
+
+    &:hover {
+      background: #2563eb;
+    }
+
+    &:active {
+      background: #1d4ed8;
+    }
+  }
+
+  .saveIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    color: white;
+    /* <-- ТЕПЕРЬ РАБОТАЕТ */
+  }
 }
